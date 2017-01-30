@@ -14,7 +14,6 @@
 @property (nonatomic, copy  ) NSArray    *colors;
 @property (nonatomic, copy  ) NSArray    *locations;
 @property (nonatomic, assign) CGPoint    startPoint;
-@property (nonatomic, assign) CGPoint    endPoint;
 
 //replicator layer property
 @property (nonatomic, assign) NSUInteger count;
