@@ -24,44 +24,60 @@
     self = [super init];
     if ( self )
     {
-        self.gradientLayer = ({
-            CAGradientLayer *layer = [CAGradientLayer new];
-            
-            [self.layer addSublayer:layer];
-            
-            layer;
-        });
-        
-        self.replicatorLayer = ({
-            CAReplicatorLayer *layer = [CAReplicatorLayer new];
-            
-            self.gradientLayer.mask = layer;
-            
-            layer;
-        });
-        
-        self.circleLayer = ({
-            CAShapeLayer *layer = [CAShapeLayer new];
-            layer.strokeColor     = [UIColor whiteColor].CGColor;
-            layer.fillColor       = [UIColor clearColor].CGColor;
-            
-            [self.replicatorLayer addSublayer:layer];
-            
-            layer;
-        });
-        
-        self.minRadius = 10;
-        self.maxRadius = 100;
-        
-        self.duration = 3.0f;
-        self.count = 6;
-        self.lineWidth = 2.0f;
-        
-        self.colors = @[(__bridge id)[UIColor orangeColor].CGColor,(__bridge id)[UIColor orangeColor].CGColor];
-        
-        self.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        [self setup];
     }
     return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setup];
+    }
+    return self;
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    [self setup];
+}
+
+- (void)setup {
+    self.gradientLayer = ({
+        CAGradientLayer *layer = [CAGradientLayer new];
+        
+        [self.layer addSublayer:layer];
+        
+        layer;
+    });
+    
+    self.replicatorLayer = ({
+        CAReplicatorLayer *layer = [CAReplicatorLayer new];
+        
+        self.gradientLayer.mask = layer;
+        
+        layer;
+    });
+    
+    self.circleLayer = ({
+        CAShapeLayer *layer = [CAShapeLayer new];
+        layer.strokeColor     = [UIColor whiteColor].CGColor;
+        layer.fillColor       = [UIColor clearColor].CGColor;
+        
+        [self.replicatorLayer addSublayer:layer];
+        
+        layer;
+    });
+    
+    self.minRadius = 10;
+    self.maxRadius = 100;
+    
+    self.duration = 3.0f;
+    self.count = 6;
+    self.lineWidth = 2.0f;
+    
+    self.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
 }
 
 - (void)setColors:(NSArray *)colors
@@ -92,16 +108,6 @@
 - (CGPoint)startPoint
 {
     return self.gradientLayer.startPoint;
-}
-
-- (void)setEndPoint:(CGPoint)endPoint
-{
-    self.gradientLayer.endPoint = endPoint;
-}
-
-- (CGPoint)endPoint
-{
-    return self.gradientLayer.endPoint;
 }
 
 - (void)setDuration:(CGFloat)duration
@@ -144,8 +150,8 @@
 
 - (void)startAnimation
 {
-    CGRect fromRect = CGRectMake(CGRectGetMidX(self.bounds)-self.minRadius, CGRectGetMidY(self.bounds)-self.minRadius, self.minRadius*2, self.minRadius*2);
-    CGRect toRect   = CGRectMake(CGRectGetMidX(self.bounds)-self.maxRadius, CGRectGetMidY(self.bounds)-self.maxRadius, self.maxRadius*2, self.maxRadius*2);
+    CGRect fromRect = CGRectMake(self.startPoint.x-self.minRadius, self.startPoint.y-self.minRadius, self.minRadius*2, self.minRadius*2);
+    CGRect toRect   = CGRectMake(self.startPoint.x-self.maxRadius, self.startPoint.y-self.maxRadius, self.maxRadius*2, self.maxRadius*2);
     
     CABasicAnimation *zoomAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
     zoomAnimation.duration          = self.duration;
